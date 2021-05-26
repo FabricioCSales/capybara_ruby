@@ -17,3 +17,111 @@ tambem utilizado no Selenium);
    vai criar a estrutura:   
      create   .rspec
      create   spec/spec_helper.rb
+    Dentro da nossa pagina do projeto
+    Criar arquivo de teste para verificar se rspec esta funcionando
+      describe "Meu primeiro script" do
+        it "visitar a página" do
+          puts "acessando a pagina"
+        end
+      end
+      Describe é  suite de testes, sempre é fechada com do end, e entre os dois vai conter os testes
+      it sera o bloco de teste criado
+    Depois de salvar o arquivo, execute no terminal o compando RSPEC e a saida deve ser:
+      λ rspec
+      acessando a pagina
+      .
+
+      Finished in 0.0881 seconds (files took 2.56 seconds to load)
+      1 example, 0 failures
+  3.4. Utilizaremos agora comandos capybara para automatizar os testes pois o rspec não interage com as paginas externas
+      Para isso, devemos parametrizar para que o rspec reconheça os comandos capybara
+      Acesse o arquivo spec_helper e retire todos os textos comentados.
+      Inclua no inicio do arquivo as importações necessárias
+        require "capybara"
+        require "capybara/rspec"
+        require "selenium-webdriver"
+      
+      Ainda no arquivo ajuste esta etapa do código:
+         config.shared_context_metadata_behavior = :apply_to_host_groups
+
+         config.include Capybara::DSL
+         end                                            
+      Essa configuração trara para o rspec todos os métodos, funções e recursos do capybara
+
+      Inclua a nova configuração abaixo, do capybara, para definir o browser padrão para execução dos teste
+        Capybara.configure do |config|
+          config.default_driver = :selenium_chrome
+        end
+  3.5 Incluir comando capybara no arquivo de teste:
+      describe "Meu primeiro script" do
+         it "visitar a página" do
+            visit "https://training-wheels-protocol.herokuapp.com"
+            sleep 4
+          end
+      end
+    Ao executar rspec, o sistema apresentara um erro com a mensagem: (Caso não tenha o crhome webdriver instalado na máquina
+    )
+      λ rspec                                                                                             
+       F                                                                                                   
+                                                                                                     
+        Failures:                                                                                           
+                                                                                                            
+          1) Meu primeiro script visitar a página                                                           
+             Failure/Error: visit "https://training-wheels-protocol.herokuapp.com"                          
+                                                                                                            
+             Selenium::WebDriver::Error::WebDriverError:                                                    
+               Unable to find chromedriver. Please download the server from                                 
+               https://chromedriver.storage.googleapis.com/index.html and place it somewhere on your PATH.  
+               More info at https://github.com/SeleniumHQ/selenium/wiki/ChromeDriver.                       
+             # ./spec/hello_spec.rb:3:in `block (2 levels) in <top (required)>'                             
+                                                                                                            
+        Finished in 1.3 seconds (files took 4.34 seconds to load)                                           
+        1 example, 1 failure                                                                                
+                                                                                                            
+       Failed examples:                                                                                    
+                                                                                                           
+       rspec ./spec/hello_spec.rb:2 # Meu primeiro script visitar a página       
+
+      Faça o download do arquivo indicado no proprio erro. Procure a versão compativel com o seu navegador
+      Depois de baixar, salvo o arquivo .exe dentro de C:\windows, por exemplo. Pois o mesmo deve esta no path do seu SO
+
+      Depois execute o RSPEC novamente.. Nesse momento o Chrome deve estar instalado no PC. 
+      Se tudo ocorrer bem, deverá abrir o Chrome e abrir o endereço indicado no teste
+  
+** NOTE QUE NESSE INSTANTE VOCE ESTA USANDO O COMENTO VISIT DO CAPYBARA PARA INTERAGIR COM A PAGINA, E A SUITE QUE ESTA
+COM A ESTRUTURA DO RSPEC, QUE INCLUSIVE É O RSPEC QUE EXECUTA O TESTE
+
+  Arquivo de teste final para o exemplo:
+    describe "Meu primeiro script" do
+      it "visitar a página" do
+        visit "https://training-wheels-protocol.herokuapp.com"
+        expect(page.title).to eql "Training Wheels Protocol"
+      end
+    end
+  No script: o visit, page.title, são comandos que o capybara passa, para a intereção com o browser
+           : o it, expect, .to eql, são comandos do rspec de validação e extutura 
+ 3.6. Para executar o teste com FIREFOX. o arquivo spec_helper deve ser alterado:
+  Capybara.configure do |config|
+    #config.default_driver = :selenium_chrome -> Testar com CHROME
+    #config.default_driver = :selenium -> Testar com FIREFOX
+    config.default_driver = :selenium
+  end          
+      
+  Ao tentar executar, caso não tenha o FIREFOX instalado no pc, apresentará o erro:
+
+  Meu primeiro script                                                                       
+  visitar a página (FAILED - 1)                                                           
+                                                                                          
+    Failures:                                                                                 
+                                                                                          
+      1) Meu primeiro script visitar a página                                                 
+      Failure/Error: visit "https://training-wheels-protocol.herokuapp.com"                
+                                                                                          
+      Selenium::WebDriver::Error::WebDriverError:                                          
+       Could not find Firefox binary (os=windows). Make sure Firefox is installed or set t
+      he path manually with Selenium::WebDriver::Firefox::Binary.path=                          
+      # ./spec/hello_spec.rb:3:in `block (2 levels) in <top (required)>'                   
+
+  Você deve instalar o Firefox.
+    o arquivo deve ser salvo no C:\windows geckodriver-v0.29.1-win64
+
