@@ -125,3 +125,30 @@ COM A ESTRUTURA DO RSPEC, QUE INCLUSIVE É O RSPEC QUE EXECUTA O TESTE
   Você deve instalar o Firefox.
     o arquivo deve ser salvo no C:\windows geckodriver-v0.29.1-win64
 
+3.7 Teste com formulários:
+: describe 'Forms' do     
+    it 'Login com sucesso'do
+        visit 'https://training-wheels-protocol.herokuapp.com/login'
+
+        fill_in 'username', with: 'stark'
+        fill_in 'password', with: 'jarvis!'
+
+        click_button 'Login'
+
+        expect(find('#flash').visible?).to be true
+
+        #expect(find('#flash').text).to eql 'Olá, Tony Stark. Você acessou a área logada!'
+
+        expect(find('#flash').text).to include 'Olá, Tony Stark. Você acessou a área logada!'
+
+        expect(find('#flash')).to have_content 'Olá, Tony Stark. Você acessou a área logada!'
+    end 
+end
+  NO SCRIPT ACIMA, DEFINIMOS QUE O CAPYBARA BUSCARA O SITE PELO COMANDO VISIT, TAMBEM TEMOS OS COMANDOS:
+    = fill_in 'username', with: 'stark' > No campo username, inclua o valor stark
+    = click_button 'Login' > clica no botão com o nome Login
+    = expect(find('#flash').visible?).to be true > usa o expect do rspec para validação;
+      find do capybara para encontrar o elemento, .visible? .to be true > se o elemento é visível
+      .to eql > verifica se a string é igual a informada
+      .to include > se o texto esta incluso no elemento
+      .to have_content > se o texto esta contido no elemento
