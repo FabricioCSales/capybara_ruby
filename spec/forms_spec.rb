@@ -44,7 +44,5 @@ describe 'Forms' do
         expect(find('#flash-messages').text).to include 'O usuário informado não está cadastrado!'
 
         expect(find('#flash-messages')).to have_content 'O usuário informado não está cadastrado!'
-    end
-
-    
+    end 
 end

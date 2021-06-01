@@ -152,3 +152,15 @@ end
       .to eql > verifica se a string é igual a informada
       .to include > se o texto esta incluso no elemento
       .to have_content > se o texto esta contido no elemento
+
+Aula - Dropdown
+  Para selecionar uma opção do dropdown, o Capybara lê com essa estrutura:
+   select('Opção', from: 'Elemento')
+   select('item1', from: 'dropdown')
+     * Para descobrir o nome do elemento, deve fazer inspecionar a página (F12)
+
+    Caso o dropdown não tenha um id, poderemos utilizar o elementos de CSS,
+    no caso usaremos o a classe do elemento, com o find:
+        visit 'https://training-wheels-protocol.herokuapp.com/dropdown'
+        drop = find('.avenger-list')
+        drop.find('option', text: 'Bucky').select_option
